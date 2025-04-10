@@ -1,15 +1,18 @@
-import random
+from utils import generate_random_rect_matrix
 
-def countRepeats(row):
+
+def count_repeats(row):
     counts = {}
     for num in row:
         counts[num] = counts.get(num, 0) + 1
     return sum(c - 1 for c in counts.values() if c > 1)
 
-def sortMatrixByRepeats(matrix):
-    return sorted(matrix, key=countRepeats)
 
-def findFirstNonNegativeColumn(matrix):
+def sort_matrix_by_repeats(matrix):
+    return sorted(matrix, key = count_repeats)
+
+
+def find_first_non_negative_column(matrix):
     if not matrix or not matrix[0]:
         return -1  
     numCols = len(matrix[0])
@@ -17,27 +20,28 @@ def findFirstNonNegativeColumn(matrix):
     for col in range(numCols):
         if all(matrix[row][col] >= 0 for row in range(numRows)):
             return col  
-    return "There is no non-negative element in any of the columns"
+    return "None"
 
-def generateRandomMatrix(rows, cols, minVal=-10, maxVal=10):
-    return [[random.randint(minVal, maxVal) for _ in range(cols)] for _ in range(rows)]
 
-if __name__ == '__main__':
-    rows = 5        
-    cols = 7        
-    minVal = -10    
-    maxVal = 10     
-    
-    matrix = generateRandomMatrix(rows, cols, minVal, maxVal)
-    sortedMatrix = sortMatrixByRepeats(matrix)
-    firstNonNegativeCol = findFirstNonNegativeColumn(sortedMatrix)
-    
-    print("Original matrix:")
+def print_matrix(matrix, title):
+    print(f"\n{title}")
     for row in matrix:
-        print(row)
-    
-    print("\nOrdered matrix:")
-    for row in sortedMatrix:
-        print(row)
-    
-    print("\nFirst column without negative elements:", firstNonNegativeCol)
+        print(" ".join(f"{val:3}" for val in row))
+
+
+def main():
+    ROWS = 5
+    COLS = 7
+
+    matrix = generate_random_rect_matrix(ROWS, COLS)
+    sorted_matrix = sort_matrix_by_repeats(matrix)
+    first_non_negative_col = find_first_non_negative_column(sorted_matrix)
+
+    print_matrix(matrix, "Original matrix:")
+    print_matrix(sorted_matrix, "Matrix sorted by repeated elements count:")
+
+    print(f"\nFirst column without negative elements: {first_non_negative_col}")
+
+
+if __name__ == "__main__":
+    main()
