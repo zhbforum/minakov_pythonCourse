@@ -6,10 +6,10 @@ def smooth_matrix(matrix):
     n = len(matrix)
     smoothed = [[0] * n for _ in range(n)]
 
-    for i, j in itertools.product(range(n), repeat = 2):
+    for i, j in itertools.product(range(n), repeat=2):
         neighbors = [
             matrix[i + di][j + dj]
-            for di, dj in itertools.product([-1, 0, 1], repeat = 2)
+            for di, dj in itertools.product([-1, 0, 1], repeat=2)
             if not (di == 0 and dj == 0)
             and 0 <= i + di < n
             and 0 <= j + dj < n
