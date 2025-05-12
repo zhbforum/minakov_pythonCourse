@@ -1,15 +1,18 @@
-from utils import generate_random_matrix_int
+from utils import generate_random_matrix_int, print_matrix
 
 
-def rotate_layer(matrix, layer, k):
-    n = len(matrix)
-
+def get_layer_indices(n, layer):
     top = [(layer, j) for j in range(layer, n - layer)]
     right = [(i, n - layer - 1) for i in range(layer + 1, n - layer)]
     bottom = [(n - layer - 1, j) for j in range(n - layer - 2, layer - 1, -1)]
     left = [(i, layer) for i in range(n - layer - 2, layer, -1)]
 
-    indices = top + right + bottom + left
+    return top + right + bottom + left
+
+
+def rotate_layer(matrix, layer, k):
+    n = len(matrix)
+    indices = get_layer_indices(n, layer)
 
     if not indices:
         return
@@ -18,8 +21,9 @@ def rotate_layer(matrix, layer, k):
     k %= len(values)
     rotated = values[-k:] + values[:-k]
 
-    for idx, (i, j) in enumerate(indices):
-        matrix[i][j] = rotated[idx]
+    for idx, val in enumerate(rotated):
+        i, j = indices[idx]
+        matrix[i][j] = val
 
 
 def rotate_matrix(matrix, k):
@@ -29,32 +33,20 @@ def rotate_matrix(matrix, k):
     return matrix
 
 
-def print_matrix(matrix):
-    for row in matrix:
-        print(" ".join(f"{val:3}" for val in row))
-    print()
-
-
 def main():
     n = int(input("Input size of matrix: "))
-    while True:
-        if n < 1:
-            print("Size of matrix should be greater than 0")
-            n = int(input("Input size of matrix: "))
-        else:
-            break
+    while n < 1:
+        print("Size of matrix should be greater than 0")
+        n = int(input("Input size of matrix: "))
 
     k = int(input("Input amount of rotation: "))
 
     matrix = generate_random_matrix_int(n, 1)
 
-    print("\nOriginal matrix:")
-    print_matrix(matrix)
-
+    print_matrix(matrix, "Original matrix:")
     rotate_matrix(matrix, k)
-
-    print("Matrix after rotation:")
-    print_matrix(matrix)
+    
+    print_matrix(matrix, "Matrix after rotation:")
 
 
 if __name__ == "__main__":
