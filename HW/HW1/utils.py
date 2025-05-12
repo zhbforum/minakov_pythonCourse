@@ -1,7 +1,7 @@
 import random
 
 
-def generate_random_matrix_uniform(n=0):
+def generate_random_matrix_uniform(n):
     return [[round(random.uniform(-10, 10), 2) for _ in range(n)] for _ in range(n)]
 
 
