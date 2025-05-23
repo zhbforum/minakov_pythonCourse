@@ -1,10 +1,10 @@
 import requests
 import logging
 import os
-from constants import BASE_URL, MAX_ROWS, CSV_FORMAT
+from constants import BASE_URL, MAX_ROWS, CSV_FORMAT, LOGGER_NAME
 
 
-log = logging.getLogger("lab_3_logger")
+log = logging.getLogger(LOGGER_NAME)
 
 
 def download_users_csv(filename: str, dest_folder: str, gender: str = None, rows: int = MAX_ROWS):
