@@ -1,10 +1,10 @@
 import os
 import logging
 import zipfile
-from constants import ARCHIVE_EXTENSION
+from constants import ARCHIVE_EXTENSION, LOGGER_NAME
 
 
-log = logging.getLogger("lab_3_logger")
+log = logging.getLogger(LOGGER_NAME)
 
 
 def log_folder_structure(folder_path: str, indent: int = 0):
