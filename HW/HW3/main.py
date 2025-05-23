@@ -7,10 +7,10 @@ from download_utils import download_users_csv
 from processing_functions import process_csv
 from data_organizer import organize_and_save
 from archive_utils import log_folder_structure, archive_folder
-from constants import CSV_FORMAT
+from constants import CSV_FORMAT, LOGGER_NAME
 
 
-log = logging.getLogger("lab_3_logger")
+log = logging.getLogger(LOGGER_NAME)
 
 
 def parse_args():
@@ -79,7 +79,7 @@ def main():
         filename=args.filename,
         dest_folder=dest_folder,
         gender=args.gender,
-        rows=args.rows,
+        rows=args.rows 
     )
 
     dest_file_path = os.path.join(dest_folder, f"{args.filename}.{CSV_FORMAT}")
