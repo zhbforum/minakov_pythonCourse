@@ -24,6 +24,8 @@ TITLE_MAP = {
 # Logging 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
 DEFAULT_LOG_FILE = "script.log"
+LOGGER_NAME = "lab_3_logger"
 
 # Archive settings
 ARCHIVE_EXTENSION = ".zip"
+
