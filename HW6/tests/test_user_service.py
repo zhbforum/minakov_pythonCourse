@@ -69,10 +69,17 @@ def test_update_user_invalid_name():
 
 
 def test_update_user_ignored_fields():
-    result = update_user(4, {"not_a_field": "value"})
+    with patch("services.user_service.update_object") as mock_update:
+        mock_update.return_value = {
+            "status": "fail",
+            "message": "No fields provided"
+        }
 
-    assert result["status"] == "fail"
-    assert "No fields provided" in result["message"]
+        result = update_user(4, {"not_a_field": "value"})
+
+        assert result["status"] == "fail"
+        assert "No fields provided" in result["message"]
+        mock_update.assert_called_once()
 
 
 def test_delete_user_valid():
