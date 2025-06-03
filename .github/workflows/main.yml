@@ -25,6 +25,9 @@ jobs:
           pip install -r HW6/requirements.txt
           pip install pytest
 
+      - name: Create logs directory
+        run: mkdir -p HW6/logs
+
       - name: Run tests
         working-directory: HW6
         run: pytest tests/
