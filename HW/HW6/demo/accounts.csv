@@ -1,0 +1,5 @@
+user_id,type,account_number,bank_id,currency,amount,status
+1,credit,ID--abc-1234567-xz,1,USD,1000.0,gold
+2,debit,ID--xyz-9876543-ab,2,EUR,2000.0,silver
+3,credit,ID--xyx-9879881-xd,2,EUR,5650.0,silver
+4,debit,ID--zyx-5637216-le,4,USD,-300.0,silver
