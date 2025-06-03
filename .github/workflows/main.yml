@@ -26,7 +26,8 @@ jobs:
           pip install pytest
 
       - name: Create logs directory
-        run: mkdir -p HW6/logs
+        working-directory: HW6
+        run: mkdir -p logs
 
       - name: Run tests
         working-directory: HW6
