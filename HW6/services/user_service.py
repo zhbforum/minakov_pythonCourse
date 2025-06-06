@@ -40,6 +40,9 @@ def update_user(user_id: int, fields: dict) -> dict:
         if key in fields:
             updates[key] = fields[key]
 
+    if not updates:
+        return api_response(False, "No fields provided for update", log_type=LOG_ERROR)
+
     return update_object(
         table="User",
         id_value=user_id,
