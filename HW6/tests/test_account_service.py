@@ -38,21 +38,23 @@ def test_delete_account():
         assert "deleted" in result["message"]
 
 
-@patch("services.account_service.logger")
-@patch("services.account_service.load_csv_to_dicts")
-@patch("services.account_service.add_account")
-def test_add_account_from_csv_success(mock_add, mock_load, mock_logger):
-    mock_load.return_value = [{
-        "user_id": 1,
-        "bank_id": 1,
-        "type": "checking",
-        "account_number": "acc123",
-        "currency": "USD",
-        "amount": 100.0
-    }]
-    mock_add.return_value = {"status": "success", "message": "Imported"}
+def test_add_account_from_csv_success():
+    with patch("services.account_service.logger") as mock_logger, \
+         patch("services.account_service.load_csv_to_dicts") as mock_load, \
+         patch("services.account_service.add_account") as mock_add:
 
-    result = add_account_from_csv("dummy.csv")
+        mock_load.return_value = [{
+            "user_id": 1,
+            "bank_id": 1,
+            "type": "checking",
+            "account_number": "acc123",
+            "currency": "USD",
+            "amount": 100.0
+        }]
+        mock_add.return_value = {"status": "success", "message": "Imported"}
 
-    assert result["status"] == "success"
-    assert "imported" in result["message"].lower()
+        result = add_account_from_csv("test.csv")
+
+        assert result["status"] == "success"
+        assert "imported" in result["message"].lower()
+        mock_logger.info.assert_called()

@@ -28,48 +28,57 @@ def test_load_csv_to_dicts(tmp_path):
     ]
 
 
-@patch("utils.utils.requests.get")
-def test_get_exchange_rate_success(mock_get):
-    mock_get.return_value.status_code = 200
-    mock_get.return_value.json.return_value = {
-        "data": {"EUR": 0.91}
-    }
+def test_get_exchange_rate_success():
+    with patch("utils.utils.requests.get") as mock_get:
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = {
+            "data": {"EUR": 0.91}
+        }
 
-    rate = get_exchange_rate("USD", "EUR")
-    assert rate == 0.91
+        rate = get_exchange_rate("USD", "EUR")
 
-
-@patch("utils.utils.requests.get")
-def test_get_exchange_rate_no_rate(mock_get):
-    mock_get.return_value.status_code = 200
-    mock_get.return_value.json.return_value = {
-        "data": {}
-    }
-
-    with pytest.raises(ValueError):
-        get_exchange_rate("USD", "FAKE")
+        assert rate == 0.91
+        mock_get.assert_called_once()
 
 
-@patch("utils.utils.requests.get")
-def test_get_exchange_rate_api_error(mock_get):
-    mock_get.return_value.status_code = 500
-    mock_get.return_value.text = "Server Error"
+def test_get_exchange_rate_no_rate():
+    with patch("utils.utils.requests.get") as mock_get:
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = {
+            "data": {}
+        }
 
-    with pytest.raises(RuntimeError):
-        get_exchange_rate("USD", "EUR")
+        with pytest.raises(ValueError, match="not found"):
+            get_exchange_rate("USD", "ZHB")
+
+        mock_get.assert_called_once()
 
 
-@patch("utils.utils.requests.get")
-def test_get_exchange_rate_limit_exceeded(mock_get):
-    mock_get.return_value.status_code = 429
-    mock_get.return_value.text = "Rate limit exceeded"
+def test_get_exchange_rate_api_error():
+    with patch("utils.utils.requests.get") as mock_get:
+        mock_get.return_value.status_code = 500
+        mock_get.return_value.text = "Server Error"
 
-    with pytest.raises(RuntimeError):
-        get_exchange_rate("USD", "EUR")
+        with pytest.raises(RuntimeError, match="500"):
+            get_exchange_rate("USD", "EUR")
+
+        mock_get.assert_called_once()
+
+
+def test_get_exchange_rate_limit_exceeded():
+    with patch("utils.utils.requests.get") as mock_get:
+        mock_get.return_value.status_code = 429
+        mock_get.return_value.text = "Rate limit exceeded"
+
+        with pytest.raises(RuntimeError, match="limit.*exceeded"):
+            get_exchange_rate("USD", "EUR")
+
+        mock_get.assert_called_once()
 
 
 def test_api_response_success():
     result = api_response(True, "All good", data={"key": "value"})
+
     assert result["status"] == "success"
     assert result["message"] == "All good"
     assert result["data"] == {"key": "value"}
@@ -78,6 +87,7 @@ def test_api_response_success():
 def test_api_response_fail_with_log(caplog):
     with caplog.at_level("INFO"):
         result = api_response(False, "Something failed", log_type="info")
+
         assert result["status"] == "fail"
         assert "Something failed" in result["message"]
         assert "Something failed" in caplog.text

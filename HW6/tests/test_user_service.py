@@ -22,12 +22,15 @@ def test_add_user_valid_list(sample_users):
 
         assert result["status"] == "success"
         assert len(result["data"]) == 2
+        mock_add.assert_called_once()
 
 
 def test_add_user_invalid_name():
     user = {"user_full_name": "Bareksten", "accounts": "777"}
+
     with patch("services.user_service.add_objects") as mock_add:
         result = add_user(None, user)
+
         assert result["status"] == "fail"
         assert "Full name" in result["message"]
         mock_add.assert_not_called()
@@ -41,6 +44,7 @@ def test_add_user_missing_accounts():
 
         assert result["status"] == "fail"
         assert "accounts" in result["message"]
+        mock_add.assert_not_called()
 
 
 def test_update_user_valid_partial():
@@ -69,17 +73,10 @@ def test_update_user_invalid_name():
 
 
 def test_update_user_ignored_fields():
-    with patch("services.user_service.update_object") as mock_update:
-        mock_update.return_value = {
-            "status": "fail",
-            "message": "No fields provided"
-        }
+    result = update_user(4, {"not_a_field": "value"})
 
-        result = update_user(4, {"not_a_field": "value"})
-
-        assert result["status"] == "fail"
-        assert "No fields provided" in result["message"]
-        mock_update.assert_called_once()
+    assert result["status"] == "fail"
+    assert "No fields provided" in result["message"]
 
 
 def test_delete_user_valid():
