@@ -1,0 +1,9 @@
+strictness: medium
+doc-warnings: false
+
+ignore:
+  - import-error
+
+pylint:
+  disable:
+    - import-error
